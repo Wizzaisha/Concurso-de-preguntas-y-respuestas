@@ -41,6 +41,9 @@ def create_questions(questions, q_list):
         q_list.append(new_question)
 
 
+# Lista con todos los datos
+data_bank = []
+
 # Variables de la captura de datos para cada una de las rondas
 very_easy_data = []
 easy_data = []
@@ -52,15 +55,21 @@ very_hard_data = []
 ronda1_easy_q = get_data(difficulty="easy", amount=5)
 create_questions(ronda1_easy_q, very_easy_data)
 
+data_bank.append(very_easy_data)
+
 # Datos ronda 2
 ronda2_medium_q = get_data(difficulty="medium", amount=2)
 ronda2_easy_q = get_data(difficulty="easy", amount=3)
 create_questions(ronda2_medium_q, easy_data)
 create_questions(ronda2_easy_q, easy_data)
 
+data_bank.append(easy_data)
+
 # Datos ronda 3
 ronda3_medium_q = get_data(difficulty="medium", amount=5)
 create_questions(ronda3_medium_q, medium_data)
+
+data_bank.append(medium_data)
 
 # Datos ronda 4
 ronda4_hard_q = get_data(difficulty="hard", amount=3)
@@ -68,6 +77,10 @@ ronda4_medium_q = get_data(difficulty="medium", amount=2)
 create_questions(ronda4_hard_q, hard_data)
 create_questions(ronda4_medium_q, hard_data)
 
+data_bank.append(hard_data)
+
 # Datos ronda 5
 ronda5_hard_q = get_data(difficulty="hard", amount=5)
+create_questions(ronda5_hard_q, very_hard_data)
 
+data_bank.append(very_hard_data)

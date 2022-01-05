@@ -1,41 +1,55 @@
+import data
 import html
 
 
 class QuizGame:
 
-    def __init__(self, q_list):
+    def __init__(self):
+        # Round
         self.round_number = 0
+        # No. Question
         self.question_number = 0
-        self.score = 0
-        self.question_list = q_list
+
+        # Prizes
+        self.current_prize = 0
+
+        # Question data
+        self.question_list = data.data_bank[self.round_number]
+
+        # Question text and answers
         self.current_question = None
+        self.correct_answer = None
+        self.option_a = None
+        self.option_b = None
+        self.option_c = None
+        self.option_d = None
 
     def still_has_rounds(self):
+
         return self.round_number < 6
 
     def still_has_questions(self):
         return self.question_number < len(self.question_list)
 
     def next_question(self):
+
         self.current_question = self.question_list[self.question_number]
-        self.question_number += 1
+
+        self.option_a = html.unescape(self.current_question.all_answers[0])
+        self.option_b = html.unescape(self.current_question.all_answers[1])
+        self.option_c = html.unescape(self.current_question.all_answers[2])
+        self.option_d = html.unescape(self.current_question.all_answers[3])
+        self.correct_answer = html.unescape(self.current_question.answer)
 
         q_text = html.unescape(self.current_question.text)
 
-        question = f"Round: {self.round_number}\n" \
-                   f"Q. {self.question_number} {q_text}\n" \
-                   f"A. {self.current_question.all_answers[0]}\n" \
-                   f"B. {self.current_question.all_answers[1]}\n" \
-                   f"C. {self.current_question.all_answers[2]}\n" \
-                   f"D. {self.current_question.all_answers[3]}\n" \
-                   f"Pssst: {self.current_question.answer}"
+        self.question_number += 1
 
-        user_answer = input(question)
-        self.check_answer(user_answer, self.current_question.answer)
+        return f"Q.{self.question_number}: {q_text}"
 
-    def check_answer(self, user_answer, correct_answer):
-        if user_answer.lower() == correct_answer.lower():
-            print("YAY!")
-            self.score += 1
+    def check_answer(self, user_answer):
+
+        if user_answer == self.correct_answer:
+            return True
         else:
-            print("Oh nyo")
+            return False

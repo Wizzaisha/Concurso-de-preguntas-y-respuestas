@@ -1,18 +1,11 @@
-import data
 from quiz_game import QuizGame
+from ui import QuizInterface
 
 
-round1_questions = data.very_easy_data
+# Quiz logic
+current_round = QuizGame()
 
-round1 = QuizGame(round1_questions)
 
-while round1.still_has_rounds():
-    round1.next_question()
+# UI
+quiz_ui = QuizInterface(current_round)
 
-# round2_questions = data.easy_data
-#
-# round3_questions = data.medium_data
-#
-# round4_questions = data.hard_data
-#
-# round5_questions = data.very_hard_data
