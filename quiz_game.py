@@ -24,10 +24,6 @@ class QuizGame:
         self.option_c = None
         self.option_d = None
 
-    def still_has_rounds(self):
-
-        return self.round_number < 6
-
     def still_has_questions(self):
         return self.question_number < len(self.question_list)
 
@@ -53,3 +49,15 @@ class QuizGame:
             return True
         else:
             return False
+
+    def final_round(self):
+        return self.round_number == 4 and self.question_number == 5
+
+    def next_round(self):
+        if self.question_number == 5:
+            self.current_prize += 10000 * 10
+            self.question_number = 0
+            self.round_number += 1
+            self.question_list = data.data_bank[self.round_number]
+
+            return True

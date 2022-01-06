@@ -1,5 +1,5 @@
-import data
 from tkinter import *
+from tkinter import messagebox
 from quiz_game import QuizGame
 
 THEME_COLOR = "#375362"
@@ -37,7 +37,7 @@ class QuizInterface:
         self.round_label.grid(column=1, row=0)
 
         # Canvas
-        self.canvas = Canvas(width=300, height=250, bg="white")
+        self.canvas = Canvas(width=350, height=250, bg="white")
         self.question_text = self.canvas.create_text(
             150,
             125,
@@ -52,7 +52,7 @@ class QuizInterface:
         # A.
         self.a_button = Button(
             text=f"A. Opcion 1",
-            width=30,
+            width=40,
             pady=10,
             command=self.a_answer
         )
@@ -61,7 +61,7 @@ class QuizInterface:
         # B.
         self.b_button = Button(
             text=f"B. Opcion 2",
-            width=30,
+            width=40,
             pady=10,
             command=self.b_answer
         )
@@ -70,7 +70,7 @@ class QuizInterface:
         # C.
         self.c_button = Button(
             text=f"B. Opcion 2",
-            width=30,
+            width=40,
             pady=10,
             command=self.c_answer
         )
@@ -79,7 +79,7 @@ class QuizInterface:
         # D.
         self.d_button = Button(
             text=f"B. Opcion 2",
-            width=30,
+            width=40,
             pady=10,
             command=self.d_answer
         )
@@ -131,21 +131,18 @@ class QuizInterface:
         if is_right:
             self.canvas.config(bg="green")
 
-            if self.quiz.round_number == 4 and self.quiz.question_number == 5:
+            if self.quiz.final_round():
                 self.canvas.itemconfig(self.question_text,
                                        text=f"Congratulations! You've reached the end of the QuizGame!"
                                             f"Your Big Prize is: {self.quiz.current_prize}")
 
                 self.disable_buttons()
 
-            elif self.quiz.question_number == 5:
-                self.quiz.round_number += 1
-                self.quiz.current_prize += 10000 * 10
-                self.quiz.question_number = 0
-
-                self.quiz.question_list = data.data_bank[self.quiz.round_number]
-
+            elif self.quiz.next_round():
+                messagebox.showinfo(title="Information", message=f"Round Clear, "
+                                                                 f"next round: {self.quiz.round_number + 1}")
             self.window.after(1000, self.get_next_question)
+
         else:
             self.canvas.config(bg="red")
             self.canvas.itemconfig(self.question_text,
