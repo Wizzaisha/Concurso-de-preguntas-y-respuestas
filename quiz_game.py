@@ -24,6 +24,9 @@ class QuizGame:
         self.option_c = None
         self.option_d = None
 
+        # Player name
+        self.player_name = ""
+
     def still_has_questions(self):
         return self.question_number < len(self.question_list)
 

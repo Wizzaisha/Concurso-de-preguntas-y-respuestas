@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import simpledialog
 from quiz_game import QuizGame
 
 THEME_COLOR = "#375362"
@@ -95,8 +96,19 @@ class QuizInterface:
         )
         self.answer_label.grid(column=0, row=6)
 
+        # Stop game and get the current prize
+        self.stop_button = Button(
+            text="Stop game",
+            bg="red",
+            width=20,
+            pady=10
+        )
+        self.stop_button.grid(column=0, row=7)
+
+        # Show the first question
         self.get_next_question()
 
+        # Window loop
         self.window.mainloop()
 
     def get_next_question(self):
@@ -137,6 +149,7 @@ class QuizInterface:
                                             f"Your Big Prize is: {self.quiz.current_prize}")
 
                 self.disable_buttons()
+                self.window.after(2000, self.player_info())
 
             elif self.quiz.next_round():
                 messagebox.showinfo(title="Information", message=f"Round Clear, "
@@ -147,10 +160,16 @@ class QuizInterface:
             self.canvas.config(bg="red")
             self.canvas.itemconfig(self.question_text,
                                    text=f"Oh sorry, Wrong answer :(, your current prize is: {self.quiz.current_prize}")
+
             self.disable_buttons()
+            self.window.after(2000, self.player_info())
 
     def disable_buttons(self):
         self.a_button.config(state="disabled")
         self.b_button.config(state="disabled")
         self.c_button.config(state="disabled")
         self.d_button.config(state="disabled")
+
+    def player_info(self):
+        self.quiz.player_name = simpledialog.askstring(title="Save your data", prompt=f"Save you data\n"
+                                                                                      f"What is your name")
