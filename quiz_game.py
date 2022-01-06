@@ -15,7 +15,8 @@ class QuizGame:
         self.current_prize = 0
 
         # Question data
-        self.question_list = data.data_bank[self.round_number]
+        self.data_game = data.new_data()
+        self.question_list = self.data_game[self.round_number]
 
         # Question text and answers
         self.current_question = None
@@ -63,7 +64,7 @@ class QuizGame:
             self.current_prize += 10000 * 10
             self.question_number = 0
             self.round_number += 1
-            self.question_list = data.data_bank[self.round_number]
+            self.question_list = self.data_game[self.round_number]
 
             return True
 
@@ -84,6 +85,12 @@ class QuizGame:
             player_name=self.player_name,
             prize=self.current_prize,
             difficulty=self.current_difficulty,
-            current_round=self.round_number,
+            current_round=self.round_number+1,
         )
 
+    def reset_game(self):
+        self.current_prize = 0
+        self.question_number = 0
+        self.round_number = 0
+        self.data_game = data.new_data()
+        self.question_list = self.data_game[self.round_number]

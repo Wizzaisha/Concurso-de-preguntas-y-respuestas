@@ -108,10 +108,11 @@ class QuizInterface:
 
         # Stop game and get the current prize
         self.stop_button = Button(
-            text="Stop game",
+            text="Claim current prize",
             bg="red",
             width=20,
-            pady=10
+            pady=10,
+            command=self.stop_and_save
         )
         self.stop_button.grid(column=0, row=8)
 
@@ -120,9 +121,11 @@ class QuizInterface:
             text="New game",
             bg="cyan",
             width=20,
-            pady=10
+            pady=10,
+            command=self.new_game
         )
         self.new_game_button.grid(column=1, row=8)
+        self.new_game_button.config(state="disable")
 
         # Show the first question
         self.get_next_question()
@@ -182,6 +185,7 @@ class QuizInterface:
             self.window.after(1000, self.get_next_question)
 
         else:
+            self.quiz.current_prize = 0
             self.canvas.config(bg="red")
             self.canvas.itemconfig(self.question_text,
                                    text=f"Oh sorry, Wrong answer :(, your current prize is: {self.quiz.current_prize}")
@@ -189,6 +193,7 @@ class QuizInterface:
             self.disable_buttons()
             self.window.after(2000, self.player_info())
             self.quiz.player_save_data()
+            self.new_game_button.config(state="active", bg="cyan")
 
     def disable_buttons(self):
         self.a_button.config(state="disabled")
@@ -196,6 +201,24 @@ class QuizInterface:
         self.c_button.config(state="disabled")
         self.d_button.config(state="disabled")
 
+    def active_buttons(self):
+        self.a_button.config(state="active")
+        self.b_button.config(state="active")
+        self.c_button.config(state="active")
+        self.d_button.config(state="active")
+
     def player_info(self):
         self.quiz.player_name = simpledialog.askstring(title="Save your data", prompt=f"Save you data\n"
                                                                                       f"What is your name")
+
+    def new_game(self):
+        self.quiz.reset_game()
+        self.window.after(1000, self.get_next_question())
+        self.active_buttons()
+        self.new_game_button.config(state="disable", bg="cyan")
+
+    def stop_and_save(self):
+        self.disable_buttons()
+        self.player_info()
+        self.quiz.player_save_data()
+        self.new_game_button.config(state="active", bg="cyan")
