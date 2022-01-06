@@ -151,7 +151,6 @@ class QuizInterface:
 
             self.answer_label.config(text=f"Pssst: {self.quiz.correct_answer}")
 
-
     def a_answer(self):
         self.give_feedback(self.quiz.check_answer(user_answer=self.quiz.option_a))
 
