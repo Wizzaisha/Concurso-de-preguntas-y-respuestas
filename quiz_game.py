@@ -31,10 +31,11 @@ class QuizGame:
         self.player_name = ""
 
     def still_has_questions(self):
+        """Retorna la condicion sobre las preguntas restantes"""
         return self.question_number < len(self.question_list)
 
     def next_question(self):
-
+        """Incorpora la informacion de la pregunta actual y sus respuestas"""
         self.current_question = self.question_list[self.question_number]
 
         self.option_a = html.unescape(self.current_question.all_answers[0])
@@ -50,16 +51,19 @@ class QuizGame:
         return f"Q.{self.question_number}: {q_text}"
 
     def check_answer(self, user_answer):
-
+        """Verfica si la respuesta data por el usuario es correcta; retornando verdadero si es la respuesta o falso
+        si no es"""
         if user_answer == self.correct_answer:
             return True
         else:
             return False
 
     def final_round(self):
+        """Vertifica si el usuario se encuentra en la ronda final"""
         return self.round_number == 4 and self.question_number == 5
 
     def next_round(self):
+        """Actualiza los valores para pasar a la siguiente ronda"""
         if self.question_number == 5:
             self.current_prize += 10000 * 10
             self.question_number = 0
@@ -69,6 +73,7 @@ class QuizGame:
             return True
 
     def difficulty(self, round_num):
+        """Obtiene la dificultan en la que se encuentra el usuario"""
         if round_num == 0:
             self.current_difficulty = "Very Easy"
         elif round_num == 1:
@@ -81,6 +86,8 @@ class QuizGame:
             self.current_difficulty = "Very Hard"
 
     def player_save_data(self):
+        """Guarda la informacion de los valores actuales del premio, dificultad y la ronda; usando el esquema de
+        la base de datos"""
         database.save_data(
             player_name=self.player_name,
             prize=self.current_prize,
@@ -89,6 +96,7 @@ class QuizGame:
         )
 
     def reset_game(self):
+        """"Resetea a los valores por defecto del juego para iniciar uno nuevo"""
         self.current_prize = 0
         self.question_number = 0
         self.round_number = 0

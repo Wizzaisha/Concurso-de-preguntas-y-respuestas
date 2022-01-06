@@ -1,7 +1,7 @@
 class Question:
 
     def __init__(self, q_text: str, q_answer: str, all_answers: list, difficulty: str):
-        """Modelo de las """
+        """Esquema de las preguntas extraidas de la API"""
 
         self.text = q_text
         self.answer = q_answer

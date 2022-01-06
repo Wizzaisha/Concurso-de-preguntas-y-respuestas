@@ -11,7 +11,7 @@ collection_name = db["game_record"]
 
 
 def save_data(player_name, prize, difficulty, current_round):
-
+    """Permite guardar los datos y enviarlos a la base de datos correspondiente del QuizGame"""
     schema_data = {
         "player_name": player_name,
         "prize": prize,

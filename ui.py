@@ -12,6 +12,7 @@ class QuizInterface:
 
     def __init__(self, quiz_game: QuizGame):
 
+        # Quiz object
         self.quiz = quiz_game
 
         # Window
@@ -134,7 +135,7 @@ class QuizInterface:
         self.window.mainloop()
 
     def get_next_question(self):
-
+        """Toma los datos del objeto QuizGame y los muestra en pantalla para obtener la pregunta correspondiente"""
         self.canvas.config(bg="white")
 
         if self.quiz.still_has_questions():
@@ -155,18 +156,27 @@ class QuizInterface:
             self.answer_label.config(text=f"Pssst: {self.quiz.correct_answer}")
 
     def a_answer(self):
+        """Analiza la respuesta 'A' de las opciones dadas, dando un feedback y verificando la respuesta
+        con la opcion correcta del QuizGame"""
         self.give_feedback(self.quiz.check_answer(user_answer=self.quiz.option_a))
 
     def b_answer(self):
+        """Analiza la respuesta 'B' de las opciones dadas, dando un feedback y verificando la respuesta
+        con la opcion correcta del QuizGame"""
         self.give_feedback(self.quiz.check_answer(user_answer=self.quiz.option_b))
 
     def c_answer(self):
+        """Analiza la respuesta 'C' de las opciones dadas, dando un feedback y verificando la respuesta
+        con la opcion correcta del QuizGame"""
         self.give_feedback(self.quiz.check_answer(user_answer=self.quiz.option_c))
 
     def d_answer(self):
+        """Analiza la respuesta 'D' de las opciones dadas, dando un feedback y verificando la respuesta
+        con la opcion correcta del QuizGame"""
         self.give_feedback(self.quiz.check_answer(user_answer=self.quiz.option_d))
 
     def give_feedback(self, is_right):
+        """Analiza si la respuesta dada es correcta o no, además analiza la ronda actual en la que se encuentra"""
         if is_right:
             self.canvas.config(bg="green")
 
@@ -196,28 +206,34 @@ class QuizInterface:
             self.new_game_button.config(state="active", bg="cyan")
 
     def disable_buttons(self):
+        """"Desactiva los botones de las respuestas"""
         self.a_button.config(state="disabled")
         self.b_button.config(state="disabled")
         self.c_button.config(state="disabled")
         self.d_button.config(state="disabled")
 
     def active_buttons(self):
+        """"Activa los botones de las respuestas"""
         self.a_button.config(state="active")
         self.b_button.config(state="active")
         self.c_button.config(state="active")
         self.d_button.config(state="active")
 
     def player_info(self):
+        """Guarda el nombre del jugador cuando decide acabar el juego, llega a la ronda final o responde mal una
+        pregunta"""
         self.quiz.player_name = simpledialog.askstring(title="Save your data", prompt=f"Save you data\n"
                                                                                       f"What is your name")
 
     def new_game(self):
+        """Permite iniciar un nuevo juego"""
         self.quiz.reset_game()
         self.window.after(1000, self.get_next_question())
         self.active_buttons()
         self.new_game_button.config(state="disable", bg="cyan")
 
     def stop_and_save(self):
+        """Permite retirarse del juego y guardar el progreso actual con el premio actual"""
         self.disable_buttons()
         self.player_info()
         self.quiz.player_save_data()

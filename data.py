@@ -27,7 +27,7 @@ def get_data(difficulty: str, amount: int) -> dict:
 
 
 def create_questions(questions, q_list):
-    """"Toma las preguntas obtenidas de la API y """
+    """Extrae la informacion de las preguntas, respuestas y dificultad; las organiza y adjunta a una lista"""
     for question in questions:
         question_text = question["question"]
         question_answer = question["correct_answer"]
@@ -42,7 +42,8 @@ def create_questions(questions, q_list):
 
 
 def new_data():
-
+    """Toma todas las peticiones para las 5 rondas, obtiene la informacion, las añade a una lista general de las 5 rondas
+    y retorna dicha lista"""
     # Lista con todos los datos
     data_bank = []
 
