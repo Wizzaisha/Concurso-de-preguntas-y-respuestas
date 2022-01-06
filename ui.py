@@ -105,6 +105,15 @@ class QuizInterface:
         )
         self.stop_button.grid(column=0, row=7)
 
+        # New game
+        self.new_game_button = Button(
+            text="New game",
+            bg="cyan",
+            width=20,
+            pady=10
+        )
+        self.new_game_button.grid(column=1, row=7)
+
         # Show the first question
         self.get_next_question()
 
