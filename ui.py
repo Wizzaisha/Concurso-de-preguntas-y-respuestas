@@ -6,6 +6,7 @@ from quiz_game import QuizGame
 THEME_COLOR = "#375362"
 FONT_QUESTION = ("Arial", 20, "italic")
 FONT_SCORE = ("Arial", 12, "bold")
+TIMER = None
 
 
 class QuizInterface:
@@ -48,6 +49,16 @@ class QuizInterface:
         )
         self.difficulty_label.grid(column=0, row=1, columnspan=2)
 
+        # Timer label
+        self.timer_label = Label(
+            text="",
+            fg="white",
+            bg=THEME_COLOR,
+            font=FONT_SCORE,
+            pady=10,
+        )
+        self.timer_label.grid(column=1, row=2)
+
         # Canvas
         self.canvas = Canvas(width=350, height=250, bg="white")
         self.question_text = self.canvas.create_text(
@@ -58,7 +69,7 @@ class QuizInterface:
             font=FONT_QUESTION
         )
 
-        self.canvas.grid(column=0, row=2, columnspan=2, pady=20)
+        self.canvas.grid(column=0, row=3, columnspan=2, pady=20)
 
         # Answer buttons
         # A.
@@ -68,7 +79,7 @@ class QuizInterface:
             pady=10,
             command=self.a_answer
         )
-        self.a_button.grid(column=0, row=3, columnspan=2)
+        self.a_button.grid(column=0, row=4, columnspan=2)
 
         # B.
         self.b_button = Button(
@@ -77,7 +88,7 @@ class QuizInterface:
             pady=10,
             command=self.b_answer
         )
-        self.b_button.grid(column=0, row=4, columnspan=2)
+        self.b_button.grid(column=0, row=5, columnspan=2)
 
         # C.
         self.c_button = Button(
@@ -86,7 +97,7 @@ class QuizInterface:
             pady=10,
             command=self.c_answer
         )
-        self.c_button.grid(column=0, row=5, columnspan=2)
+        self.c_button.grid(column=0, row=6, columnspan=2)
 
         # D.
         self.d_button = Button(
@@ -95,7 +106,7 @@ class QuizInterface:
             pady=10,
             command=self.d_answer
         )
-        self.d_button.grid(column=0, row=6, columnspan=2)
+        self.d_button.grid(column=0, row=7, columnspan=2)
 
         # Correct answer
         self.answer_label = Label(
@@ -105,7 +116,7 @@ class QuizInterface:
             font=FONT_SCORE,
             pady=20
         )
-        self.answer_label.grid(column=0, row=7)
+        self.answer_label.grid(column=0, row=8)
 
         # Stop game and get the current prize
         self.stop_button = Button(
@@ -115,7 +126,7 @@ class QuizInterface:
             pady=10,
             command=self.stop_and_save
         )
-        self.stop_button.grid(column=0, row=8)
+        self.stop_button.grid(column=0, row=9)
 
         # New game
         self.new_game_button = Button(
@@ -125,7 +136,7 @@ class QuizInterface:
             pady=10,
             command=self.new_game
         )
-        self.new_game_button.grid(column=1, row=8)
+        self.new_game_button.grid(column=1, row=9)
         self.new_game_button.config(state="disable")
 
         # Show the first question
@@ -155,6 +166,9 @@ class QuizInterface:
 
             self.answer_label.config(text=f"Pssst: {self.quiz.correct_answer}")
 
+            # Time to answer the question
+            self.count_down(60)
+
     def a_answer(self):
         """Analiza la respuesta 'A' de las opciones dadas, dando un feedback y verificando la respuesta
         con la opcion correcta del QuizGame"""
@@ -179,7 +193,7 @@ class QuizInterface:
         """Analiza si la respuesta dada es correcta o no, además analiza la ronda actual en la que se encuentra"""
         if is_right:
             self.canvas.config(bg="green")
-
+            self.reset_timer()
             if self.quiz.final_round():
                 self.canvas.itemconfig(self.question_text,
                                        text=f"Congratulations! You've reached the end of the QuizGame!"
@@ -188,6 +202,7 @@ class QuizInterface:
                 self.disable_buttons()
                 self.window.after(2000, self.player_info())
                 self.quiz.player_save_data()
+                self.new_game_button.config(state="active", bg="cyan")
 
             elif self.quiz.next_round():
                 messagebox.showinfo(title="Information", message=f"Round Clear, "
@@ -228,6 +243,7 @@ class QuizInterface:
     def new_game(self):
         """Permite iniciar un nuevo juego"""
         self.quiz.reset_game()
+        self.reset_timer()
         self.window.after(1000, self.get_next_question())
         self.active_buttons()
         self.new_game_button.config(state="disable", bg="cyan")
@@ -235,6 +251,38 @@ class QuizInterface:
     def stop_and_save(self):
         """Permite retirarse del juego y guardar el progreso actual con el premio actual"""
         self.disable_buttons()
+        self.reset_timer()
         self.player_info()
         self.quiz.player_save_data()
         self.new_game_button.config(state="active", bg="cyan")
+
+    def time_out(self):
+        """"Permite cerrar el juego de manera forzada por no responder la pregunta"""
+        self.quiz.current_prize = 0
+        self.disable_buttons()
+        self.canvas.config(bg="red")
+        self.canvas.itemconfig(self.question_text,
+                               text=f"Timeout, you didn't answer the question :(, "
+                                    f"your current prize is: {self.quiz.current_prize}")
+        self.player_info()
+        self.quiz.player_save_data()
+        self.new_game_button.config(state="active", bg="cyan")
+
+    def count_down(self, count):
+        """Permite hacer cuenta regresiva del tiempo en segundos"""
+        count_sec = count % 60
+
+        if count_sec <= 9:
+            count_sec = f"0{count_sec}"
+        self.timer_label.config(text=f"Time: {count_sec}")
+        if count > 0:
+            global TIMER
+
+            TIMER = self.window.after(1000, self.count_down, count - 1)
+        else:
+            self.time_out()
+
+    def reset_timer(self):
+        """Permite resetear el tiempo en pantalla cada que se pasa a otra pregunta"""
+        self.window.after_cancel(TIMER)
+        self.timer_label.config(text=f"")
