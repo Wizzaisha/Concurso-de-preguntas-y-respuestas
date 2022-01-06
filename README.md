@@ -7,8 +7,4 @@ Para correr el programa solo se necesitan tener las librerias mencionadas instal
 para cada una de las rondas.
 
 En el caso de la persistencia de los datos (el historico del jugador) se utilizo una base de datos No-relacional MongoDB, mas espceficicamente la base de datos online MongoAtlas,
-para la cual si el programa tiene problemas con la conexión, intentar utilizar la siguiente URL para la conexión (esta ya viene integrada en el sistema pero por algun motivo no
-carga o aparece por favor utilizarla):
-
-CONNECTION_STRING = "mongodb+srv://Wizz:Gato123@wizzdatabase.8e9zq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-
+para la cual si el programa tiene problemas con la conexión, intentar utilizar la URL para la conexión que se encuentra en el archivo de texto "urls" (esta ya viene integrada en el sistema pero por algun motivo nocarga o aparece por favor utilizarla)
