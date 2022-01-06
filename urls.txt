@@ -1,0 +1,1 @@
+CONNECTION_STRING = "mongodb+srv://Wizz:Gato123@wizzdatabase.8e9zq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
