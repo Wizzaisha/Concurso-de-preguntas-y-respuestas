@@ -1,5 +1,6 @@
 import data
 import html
+import database
 
 
 class QuizGame:
@@ -19,6 +20,7 @@ class QuizGame:
         # Question text and answers
         self.current_question = None
         self.correct_answer = None
+        self.current_difficulty = None
         self.option_a = None
         self.option_b = None
         self.option_c = None
@@ -64,3 +66,24 @@ class QuizGame:
             self.question_list = data.data_bank[self.round_number]
 
             return True
+
+    def difficulty(self, round_num):
+        if round_num == 0:
+            self.current_difficulty = "Very Easy"
+        elif round_num == 1:
+            self.current_difficulty = "Easy"
+        elif round_num == 2:
+            self.current_difficulty = "Medium"
+        elif round_num == 3:
+            self.current_difficulty = "Hard"
+        elif round_num == 4:
+            self.current_difficulty = "Very Hard"
+
+    def player_save_data(self):
+        database.save_data(
+            player_name=self.player_name,
+            prize=self.current_prize,
+            difficulty=self.current_difficulty,
+            current_round=self.round_number,
+        )
+

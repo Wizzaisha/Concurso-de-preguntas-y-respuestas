@@ -37,6 +37,16 @@ class QuizInterface:
         )
         self.round_label.grid(column=1, row=0)
 
+        # Difficulty Label
+        self.difficulty_label = Label(
+            text="",
+            fg="white",
+            bg=THEME_COLOR,
+            font=FONT_SCORE,
+            pady=10
+        )
+        self.difficulty_label.grid(column=0, row=1, columnspan=2)
+
         # Canvas
         self.canvas = Canvas(width=350, height=250, bg="white")
         self.question_text = self.canvas.create_text(
@@ -47,7 +57,7 @@ class QuizInterface:
             font=FONT_QUESTION
         )
 
-        self.canvas.grid(column=0, row=1, columnspan=2, pady=50)
+        self.canvas.grid(column=0, row=2, columnspan=2, pady=20)
 
         # Answer buttons
         # A.
@@ -57,7 +67,7 @@ class QuizInterface:
             pady=10,
             command=self.a_answer
         )
-        self.a_button.grid(column=0, row=2, columnspan=2)
+        self.a_button.grid(column=0, row=3, columnspan=2)
 
         # B.
         self.b_button = Button(
@@ -66,7 +76,7 @@ class QuizInterface:
             pady=10,
             command=self.b_answer
         )
-        self.b_button.grid(column=0, row=3, columnspan=2)
+        self.b_button.grid(column=0, row=4, columnspan=2)
 
         # C.
         self.c_button = Button(
@@ -75,7 +85,7 @@ class QuizInterface:
             pady=10,
             command=self.c_answer
         )
-        self.c_button.grid(column=0, row=4, columnspan=2)
+        self.c_button.grid(column=0, row=5, columnspan=2)
 
         # D.
         self.d_button = Button(
@@ -84,7 +94,7 @@ class QuizInterface:
             pady=10,
             command=self.d_answer
         )
-        self.d_button.grid(column=0, row=5, columnspan=2)
+        self.d_button.grid(column=0, row=6, columnspan=2)
 
         # Correct answer
         self.answer_label = Label(
@@ -94,7 +104,7 @@ class QuizInterface:
             font=FONT_SCORE,
             pady=20
         )
-        self.answer_label.grid(column=0, row=6)
+        self.answer_label.grid(column=0, row=7)
 
         # Stop game and get the current prize
         self.stop_button = Button(
@@ -103,7 +113,7 @@ class QuizInterface:
             width=20,
             pady=10
         )
-        self.stop_button.grid(column=0, row=7)
+        self.stop_button.grid(column=0, row=8)
 
         # New game
         self.new_game_button = Button(
@@ -112,7 +122,7 @@ class QuizInterface:
             width=20,
             pady=10
         )
-        self.new_game_button.grid(column=1, row=7)
+        self.new_game_button.grid(column=1, row=8)
 
         # Show the first question
         self.get_next_question()
@@ -125,8 +135,13 @@ class QuizInterface:
         self.canvas.config(bg="white")
 
         if self.quiz.still_has_questions():
+
             self.round_label.config(text=f"Round: {self.quiz.round_number + 1}")
             self.prize_label.config(text=f"Current prize: {self.quiz.current_prize}")
+
+            self.quiz.difficulty(self.quiz.round_number)
+            self.difficulty_label.config(text=f"Difficulty: {self.quiz.current_difficulty}")
+
             q_text = self.quiz.next_question()
             self.canvas.itemconfig(self.question_text, text=q_text)
             self.a_button.config(text=f"A. {self.quiz.option_a}")
@@ -135,6 +150,7 @@ class QuizInterface:
             self.d_button.config(text=f"D. {self.quiz.option_d}")
 
             self.answer_label.config(text=f"Pssst: {self.quiz.correct_answer}")
+
 
     def a_answer(self):
         self.give_feedback(self.quiz.check_answer(user_answer=self.quiz.option_a))
@@ -159,6 +175,7 @@ class QuizInterface:
 
                 self.disable_buttons()
                 self.window.after(2000, self.player_info())
+                self.quiz.player_save_data()
 
             elif self.quiz.next_round():
                 messagebox.showinfo(title="Information", message=f"Round Clear, "
@@ -172,6 +189,7 @@ class QuizInterface:
 
             self.disable_buttons()
             self.window.after(2000, self.player_info())
+            self.quiz.player_save_data()
 
     def disable_buttons(self):
         self.a_button.config(state="disabled")
